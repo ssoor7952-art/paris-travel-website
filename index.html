@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumière Paris — Travel & Experiences</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@1,400..900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"DM Sans"', 'sans-serif'],
+            serif: ['"Playfair Display"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      background-color: #000;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(251, 191, 36, 0.4) transparent;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(251, 191, 36, 0.35);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(251, 191, 36, 0.65);
+    }
+
+    /* Fixed background canvas */
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+      will-change: transform;
+      transform: translateZ(0);
+    }
+
+    .canvas-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.75) 100%);
+    }
+
+    /* Glassmorphism styling */
+    .glass-card {
+      background: rgba(18, 18, 18, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .glass-card:hover {
+      background: rgba(24, 24, 24, 0.85);
+      border-color: rgba(251, 191, 36, 0.45);
+    }
+  </style>
+</head>
+<body class="selection:bg-amber-400 selection:text-black">
+
+  <!-- Fixed Animation Canvas in Background -->
+  <canvas id="canvas"></canvas>
+  <div class="canvas-overlay"></div>
+
+  <!-- Main Website Content Layer -->
+  <div class="relative z-10 w-full flex flex-col">
+    
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-black/65 backdrop-blur-md border-b border-white/10 px-6 lg:px-12 py-5 flex items-center justify-between gap-8 transition-colors">
+      <div class="flex items-center gap-2.5 cursor-pointer">
+        <div class="w-9 h-9 rounded-full bg-amber-400 flex items-center justify-center text-black font-bold shadow-lg shadow-amber-400/20">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+          </svg>
+        </div>
+        <span class="text-xl font-bold tracking-tight text-white">Lumière Paris</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-white/80">
+        <a href="#hero" class="hover:text-amber-400 transition text-amber-400 border-b-2 border-amber-400 pb-0.5">Home</a>
+        <a href="#discover" class="hover:text-amber-400 transition">Discover</a>
+        <a href="#experiences" class="hover:text-amber-400 transition">Experiences</a>
+        <a href="#why-us" class="hover:text-amber-400 transition">Our Approach</a>
+        <a href="#booking" class="hover:text-amber-400 transition">Plan Trip</a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <a href="#booking" class="px-5 py-2.5 rounded-full bg-amber-400 hover:bg-amber-300 text-black font-semibold text-sm transition-all duration-200 flex items-center gap-2 shadow-lg shadow-amber-400/20">
+          <span>Plan My Journey</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- # 01 — HERO SECTION -->
+    <section id="hero" class="relative w-full min-h-[92vh] flex flex-col justify-between py-12 px-6 lg:px-12">
+      <div class="max-w-7xl w-full mx-auto flex-1 flex flex-col justify-center pt-8">
+        
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm mb-6 w-fit shadow-lg">
+          <span class="w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-black font-bold">
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+            </svg>
+          </span>
+          <span class="font-semibold tracking-wider uppercase text-amber-300">WELCOME TO PARIS</span>
+        </div>
+
+        <h1 class="text-5xl sm:text-7xl lg:text-8xl font-medium tracking-tight text-white leading-[1.05] mb-6 max-w-5xl drop-shadow-md">
+          Paris Is Always <br />
+          <span class="italic font-serif text-amber-300">a Good Idea.</span>
+        </h1>
+
+        <p class="text-lg sm:text-xl text-white/90 max-w-2xl leading-relaxed font-normal mb-10 drop-shadow">
+          Discover the city where every street tells a story, every moment feels timeless, and every journey becomes unforgettable.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#experiences" class="px-8 py-4 rounded-full bg-amber-400 hover:bg-amber-300 text-black font-semibold text-base transition-all duration-200 flex items-center gap-2.5 shadow-xl shadow-amber-400/25 hover:scale-[1.02]">
+            <span>Explore Paris</span>
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="#booking" class="px-8 py-4 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/30 text-white font-semibold text-base transition-all duration-200 flex items-center gap-2.5">
+            <span>Plan Your Journey</span>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="max-w-7xl w-full mx-auto pt-8 flex items-center justify-between text-xs text-white/60 border-t border-white/10">
+        <span>Full-screen cinematic Paris scroll experience</span>
+        <span class="flex items-center gap-1.5 text-amber-300">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          Île-de-France, Paris
+        </span>
+      </div>
+    </section>
+
+    <!-- # 02 — DISCOVER PARIS -->
+    <section id="discover" class="py-28 px-6 lg:px-12 max-w-7xl mx-auto w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-semibold tracking-widest uppercase">
+            THE CITY OF LIGHT
+          </div>
+          
+          <h2 class="text-4xl sm:text-5xl font-medium tracking-tight text-white leading-tight">
+            More Than a Destination. <br />
+            <span class="italic font-serif text-amber-300">A Feeling.</span>
+          </h2>
+
+          <p class="text-white/80 text-lg leading-relaxed font-normal">
+            From the golden glow of the Eiffel Tower to the charming cafés of Montmartre, Paris invites you to slow down, wander freely, and fall in love with every detail.
+          </p>
+
+          <p class="text-white/70 text-base leading-relaxed">
+            Experience the elegance, culture, romance, and timeless beauty that make Paris unlike anywhere else.
+          </p>
+
+          <div class="pt-4">
+            <a href="#experiences" class="inline-flex items-center gap-2 text-amber-300 font-semibold hover:text-amber-200 transition group text-base">
+              <span>Discover the City</span>
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 relative">
+          <div class="absolute -inset-4 bg-gradient-to-tr from-amber-500/20 to-transparent rounded-3xl blur-2xl"></div>
+          <div class="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-neutral-900/80 backdrop-blur-md">
+            <img 
+              src="assets/images/paris_experience_seine_1792537213383.jpg" 
+              alt="Seine River Paris" 
+              class="w-full h-[480px] object-cover hover:scale-105 transition-transform duration-700"
+            />
+            <div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
+              <p class="text-xs uppercase tracking-widest text-amber-300 font-semibold mb-1">Seine River Cruise</p>
+              <h4 class="text-xl font-bold text-white">Sunset over classic Haussmann architecture</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- # 03 — OUR EXPERIENCES -->
+    <section id="experiences" class="py-28 px-6 lg:px-12 w-full border-y border-white/10 bg-black/40 backdrop-blur-sm">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-20">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-semibold tracking-widest uppercase mb-4">
+            CURATED EXPERIENCES
+          </div>
+          <h2 class="text-4xl sm:text-5xl font-medium tracking-tight text-white mb-6">
+            Your Paris. <span class="italic font-serif text-amber-300">Your Story.</span>
+          </h2>
+          <p class="text-white/70 text-lg">
+            Handcrafted itineraries designed around the timeless magic of the French capital.
+          </p>
+        </div>
+
+        <!-- Three visual experience cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          
+          <!-- Card 01 -->
+          <div class="glass-card rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 group shadow-xl">
+            <div>
+              <div class="flex items-center justify-between mb-8">
+                <span class="text-xs font-mono uppercase tracking-widest text-amber-400">01 — Iconic Paris</span>
+                <div class="w-10 h-10 rounded-full bg-amber-400/10 flex items-center justify-center text-amber-300 group-hover:bg-amber-400 group-hover:text-black transition-colors">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </div>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-4">Iconic Landmarks</h3>
+              <p class="text-white/70 text-sm leading-relaxed mb-8">
+                Discover the Eiffel Tower, Louvre Museum, Arc de Triomphe, and the landmarks that define the City of Light.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-xs text-amber-300 font-medium">Full Day Guided Tour</span>
+              <svg class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 02 -->
+          <div class="glass-card rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 group shadow-xl">
+            <div>
+              <div class="flex items-center justify-between mb-8">
+                <span class="text-xs font-mono uppercase tracking-widest text-amber-400">02 — Romantic Escapes</span>
+                <div class="w-10 h-10 rounded-full bg-amber-400/10 flex items-center justify-center text-amber-300 group-hover:bg-amber-400 group-hover:text-black transition-colors">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                  </svg>
+                </div>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-4">Romantic Escapes</h3>
+              <p class="text-white/70 text-sm leading-relaxed mb-8">
+                Enjoy sunset cruises along the Seine, intimate dinners, and unforgettable moments beneath the sparkling Parisian skyline.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-xs text-amber-300 font-medium">Exclusive Evenings</span>
+              <svg class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Card 03 -->
+          <div class="glass-card rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 group shadow-xl">
+            <div>
+              <div class="flex items-center justify-between mb-8">
+                <span class="text-xs font-mono uppercase tracking-widest text-amber-400">03 — Hidden Paris</span>
+                <div class="w-10 h-10 rounded-full bg-amber-400/10 flex items-center justify-center text-amber-300 group-hover:bg-amber-400 group-hover:text-black transition-colors">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                  </svg>
+                </div>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-4">Hidden Paris</h3>
+              <p class="text-white/70 text-sm leading-relaxed mb-8">
+                Explore charming neighborhoods, secret courtyards, independent boutiques, and authentic Parisian cafés away from the crowds.
+              </p>
+            </div>
+            <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-xs text-amber-300 font-medium">Off the Beaten Path</span>
+              <svg class="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-center">
+          <a href="#booking" class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-amber-400 hover:bg-amber-300 text-black font-semibold text-base transition shadow-lg shadow-amber-400/20 hover:scale-[1.02]">
+            <span>Explore Experiences</span>
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- # 04 — WHY TRAVEL WITH US -->
+    <section id="why-us" class="py-28 px-6 lg:px-12 max-w-7xl mx-auto w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        <div class="lg:col-span-5 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-semibold tracking-widest uppercase">
+            THE ART OF TRAVEL
+          </div>
+
+          <h2 class="text-4xl sm:text-5xl font-medium tracking-tight text-white leading-tight">
+            Every Detail <br />
+            <span class="italic font-serif text-amber-300">Matters.</span>
+          </h2>
+
+          <p class="text-white/80 text-lg leading-relaxed">
+            We believe extraordinary journeys are made of thoughtful details.
+          </p>
+
+          <p class="text-white/70 text-base leading-relaxed">
+            From personalized itineraries to carefully selected experiences, we help you discover Paris in a way that feels effortless, meaningful, and entirely your own.
+          </p>
+
+          <div class="pt-4">
+            <a href="#booking" class="inline-flex items-center gap-2 text-amber-300 font-semibold hover:text-amber-200 transition group text-base">
+              <span>Our Approach</span>
+              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-6">
+          
+          <div class="glass-card rounded-3xl p-6 flex flex-col justify-between shadow-lg">
+            <div class="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-300 mb-6">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white mb-2">Personalized Journeys</h3>
+              <p class="text-xs text-white/70 leading-relaxed">Travel experiences shaped around your interests.</p>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-3xl p-6 flex flex-col justify-between shadow-lg">
+            <div class="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-300 mb-6">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white mb-2">Authentic Discoveries</h3>
+              <p class="text-xs text-white/70 leading-relaxed">Explore beyond the familiar tourist routes.</p>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-3xl p-6 flex flex-col justify-between shadow-lg">
+            <div class="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-300 mb-6">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white mb-2">Thoughtful Planning</h3>
+              <p class="text-xs text-white/70 leading-relaxed">Spend less time organizing and more time experiencing.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- # 05 — FINAL CTA / BOOKING -->
+    <section id="booking" class="relative py-32 px-6 lg:px-12 overflow-hidden border-t border-white/10 bg-black/60 backdrop-blur-md">
+      <div class="absolute inset-0 z-0 opacity-25">
+        <img 
+          src="assets/images/paris_night_eiffel_1792537229398.jpg" 
+          alt="Nighttime Eiffel Tower" 
+          class="w-full h-full object-cover object-center"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+      </div>
+
+      <div class="relative z-10 max-w-4xl mx-auto text-center space-y-8">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs font-semibold tracking-widest uppercase">
+          YOUR JOURNEY BEGINS HERE
+        </div>
+
+        <h2 class="text-5xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-white leading-tight">
+          Paris Is Waiting <br />
+          <span class="italic font-serif text-amber-300">for You.</span>
+        </h2>
+
+        <p class="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed font-normal">
+          The lights. The streets. The unforgettable moments. Your next beautiful story begins in Paris.
+        </p>
+
+        <p class="text-white/60 text-base max-w-xl mx-auto">
+          Let us help you turn your dream journey into reality.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+          <button class="px-8 py-4 rounded-full bg-amber-400 hover:bg-amber-300 text-black font-semibold text-base transition-all shadow-xl shadow-amber-400/20 flex items-center gap-2 hover:scale-[1.02]">
+            <span>Plan My Paris Trip</span>
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+          <button class="px-8 py-4 rounded-full bg-neutral-900/80 hover:bg-neutral-800 border border-white/20 text-white font-semibold text-base transition-all">
+            <span>Contact Us</span>
+          </button>
+        </div>
+
+        <p class="text-xs text-white/40 pt-12 tracking-wider font-mono uppercase">
+          Paris, France — Where Every Moment Becomes a Memory.
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 lg:px-12 bg-black/90 backdrop-blur-md border-t border-white/10 text-center text-xs text-white/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span>© 2026 Lumière Paris Travel. All rights reserved.</span>
+      <div class="flex items-center gap-6">
+        <span class="flex items-center gap-1.5 text-amber-300">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+          Fully Bonded & Insured
+        </span>
+        <span class="flex items-center gap-1.5 text-amber-300">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          Global Concierge
+        </span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Smooth Scroll Frame Animation Script -->
+  <script>
+    const TOTAL_FRAMES = 213;
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
+
+    const images = new Array(TOTAL_FRAMES + 1);
+    const loaded = new Array(TOTAL_FRAMES + 1).fill(false);
+
+    let currentProgress = 0;
+    let targetProgress = 0;
+    let renderedFrame = -1;
+
+    function getFramePath(idx) {
+      return `ezgif-frame-${String(idx).padStart(3, '0')}.jpg`;
+    }
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      const targetW = Math.round(w * dpr);
+      const targetH = Math.round(h * dpr);
+
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      if (renderedFrame > 0) {
+        render(renderedFrame, true);
+      }
+    }
+
+    function render(frameIndex, force = false) {
+      if (frameIndex === renderedFrame && !force) return;
+
+      let img = images[frameIndex];
+
+      if (!img || !loaded[frameIndex]) {
+        // Fallback to nearest loaded frame to prevent any blank frames
+        let closestIndex = -1;
+        let minDiff = Infinity;
+        for (let i = 1; i <= TOTAL_FRAMES; i++) {
+          if (loaded[i] && images[i]) {
+            const diff = Math.abs(i - frameIndex);
+            if (diff < minDiff) {
+              minDiff = diff;
+              closestIndex = i;
+            }
+          }
+        }
+
+        if (closestIndex !== -1) {
+          img = images[closestIndex];
+        } else {
+          return;
+        }
+      }
+
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const iw = img.naturalWidth;
+      const ih = img.naturalHeight;
+
+      if (!iw || !ih) return;
+
+      // Cover aspect ratio fitting
+      const scale = Math.max(cw / iw, ch / ih);
+      const dw = iw * scale;
+      const dh = ih * scale;
+      const dx = (cw - dw) * 0.5;
+      const dy = (ch - dh) * 0.5;
+
+      ctx.drawImage(img, dx, dy, dw, dh);
+      renderedFrame = frameIndex;
+    }
+
+    function updateScrollProgress() {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (maxScroll > 0) {
+        targetProgress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+      }
+    }
+
+    function loop() {
+      const diff = targetProgress - currentProgress;
+      if (Math.abs(diff) < 0.00005) {
+        currentProgress = targetProgress;
+      } else {
+        // Silky smooth exponential inertia
+        currentProgress += diff * 0.09;
+      }
+
+      const frameNumber = Math.min(
+        TOTAL_FRAMES,
+        Math.max(1, Math.round(1 + currentProgress * (TOTAL_FRAMES - 1)))
+      );
+
+      render(frameNumber);
+
+      requestAnimationFrame(loop);
+    }
+
+    function preloadFrames() {
+      // First frame loaded immediately
+      const frameOne = new Image();
+      frameOne.decoding = 'async';
+      frameOne.src = getFramePath(1);
+      frameOne.onload = () => {
+        loaded[1] = true;
+        images[1] = frameOne;
+        render(1, true);
+      };
+      images[1] = frameOne;
+
+      // Preload all remaining frames
+      for (let i = 2; i <= TOTAL_FRAMES; i++) {
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = getFramePath(i);
+        const frameIdx = i;
+
+        img.onload = () => {
+          loaded[frameIdx] = true;
+          const activeFrame = Math.round(1 + currentProgress * (TOTAL_FRAMES - 1));
+          if (activeFrame === frameIdx) {
+            render(frameIdx, true);
+          }
+        };
+
+        if (img.complete && img.naturalWidth !== 0) {
+          loaded[frameIdx] = true;
+        }
+
+        images[frameIdx] = img;
+      }
+    }
+
+    function init() {
+      resize();
+      window.addEventListener('resize', resize);
+      window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+      updateScrollProgress();
+      currentProgress = targetProgress;
+
+      preloadFrames();
+      loop();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
